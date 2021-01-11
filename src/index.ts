@@ -1,9 +1,10 @@
-export type F<T extends any[]> = (...args: T) => void;
-
-export default function debounce<T extends any[]>(f: F<T>, ms = 300): F<T> {
+export default function debounce<F extends (...args: any) => void>(
+  f: F,
+  ms = 300
+): (...args: Parameters<F>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
-  return (...args) => {
+  return (...args: Parameters<F>): void => {
     if (timeoutId !== undefined) {
       clearTimeout(timeoutId);
     }

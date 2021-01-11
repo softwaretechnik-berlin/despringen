@@ -1,2 +1,1 @@
-export declare type F<T extends any[]> = (...args: T) => void;
-export default function debounce<T extends any[]>(f: F<T>, ms?: number): F<T>;
+export default function debounce<F extends (...args: any) => void>(f: F, ms?: number): (...args: Parameters<F>) => void;
