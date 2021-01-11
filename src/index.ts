@@ -1,6 +1,8 @@
-export default function debounce<F extends (...args: any) => void>(
+const defaultMs = 300;
+
+export function debounce<F extends (...args: any) => void>(
   f: F,
-  ms = 300
+  ms = defaultMs
 ): (...args: Parameters<F>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
@@ -12,5 +14,35 @@ export default function debounce<F extends (...args: any) => void>(
     timeoutId = setTimeout(() => {
       f(...args);
     }, ms) as any;
+  };
+}
+
+type Executor<T> = {
+  resolve: (value: T) => void;
+  reject: (err: any) => void;
+};
+
+export function debounceAsync<F extends (...args: any) => any>(
+  f: F,
+  ms = defaultMs
+): (...args: Parameters<F>) => Promise<ReturnType<F>> {
+  const unresolved: Executor<ReturnType<F>>[] = [];
+
+  const debounced = debounce((...args: Parameters<F>) => {
+    try {
+      const result = f(...args);
+      unresolved.forEach((executor) => executor.resolve(result));
+    } catch (e) {
+      unresolved.forEach((executor) => executor.reject(e));
+    }
+    // empty the array
+    unresolved.length = 0;
+  }, ms);
+
+  return (...args: Parameters<F>) => {
+    return new Promise((resolve, reject) => {
+      unresolved.push({ resolve, reject });
+      debounced(...args);
+    });
   };
 }

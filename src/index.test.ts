@@ -1,9 +1,9 @@
-import debounce from "./index";
+import { debounce, debounceAsync } from "./index";
 import { jest } from "@jest/globals";
 
 jest.useFakeTimers();
 
-test("Debounces calls to it", () => {
+test("Debounces calls to a function", () => {
   var used = -1;
   const f = debounce((i: number) => (used = i), 50);
 
@@ -17,13 +17,32 @@ test("Debounces calls to it", () => {
   expect(used).toBe(3);
 });
 
-test("Can take multiple arguments of different types", () => {
+test("Debounced functions take multiple arguments of different types", () => {
   var result = "";
-  const f = debounce((str: string, i: number) => (result = `${str} = ${i}`), 50);
+  const f = debounce(
+    (str: string, i: number) => (result = `${str} = ${i}`),
+    50
+  );
 
   f("i", 3);
 
   jest.advanceTimersByTime(50);
 
   expect(result).toBe("i = 3");
+});
+
+test("Debounces to a promise", async () => {
+  var used = -1;
+  const f = debounceAsync((i: number) => (used = i), 50);
+
+  const promises: Promise<number>[] = [];
+
+  promises.push(f(1));
+  promises.push(f(2));
+  promises.push(f(3));
+
+  jest.advanceTimersByTime(50);
+
+  const results = await Promise.all(promises);
+  expect(results).toEqual([3, 3, 3]);
 });

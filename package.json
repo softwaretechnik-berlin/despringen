@@ -1,6 +1,6 @@
 {
   "name": "@softwaretechnik/despringen",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple debounce function in typescript.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
