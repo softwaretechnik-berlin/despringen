@@ -1,9 +1,9 @@
 {
   "name": "@softwaretechnik/despringen",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple debounce function in typescript.",
   "main": "./lib/index.js",
-   "types": "./lib/index.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest"
@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/softwaretechnik-berlin/despringen/issues"
   },
-  "homepage": "https://github.com/softwaretechnik-berlin/despringen#readme"
+  "homepage": "https://github.com/softwaretechnik-berlin/despringen#readme",
+  "directories": {
+    "lib": "lib"
+  }
 }
