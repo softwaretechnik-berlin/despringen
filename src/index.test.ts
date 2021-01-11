@@ -32,8 +32,22 @@ test("Debounced functions take multiple arguments of different types", () => {
 });
 
 test("Debounces to a promise", async () => {
-  var used = -1;
-  const f = debounceAsync((i: number) => (used = i), 50);
+  const f = debounceAsync((i: number) => i, 50);
+
+  const promises: Promise<number>[] = [];
+
+  promises.push(f(1));
+  promises.push(f(2));
+  promises.push(f(3));
+
+  jest.advanceTimersByTime(50);
+
+  const results = await Promise.all(promises);
+  expect(results).toEqual([3, 3, 3]);
+});
+
+test("Flattens promises", async () => {
+  const f = debounceAsync((i: number) => Promise.resolve(i), 50);
 
   const promises: Promise<number>[] = [];
 
